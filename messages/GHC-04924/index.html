@@ -5,7 +5,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex">
-        <title>Precedence out of range [GHC-25078] — Haskell Error Index</title>
+        <title>Unknown flag in GHC options pragma [GHC-04924] — Haskell Error Index</title>
         <link rel="stylesheet" href="../../css/default.css" />
         <link rel="stylesheet" href="../../css/highlight.css">
         <script src="../../js/highlight.min.js"></script>
@@ -26,54 +26,44 @@
               
                 <a href="../../index.html">Home</a>&nbsp;»
               
-              Precedence out of range [GHC-25078]
+              Unknown flag in GHC options pragma [GHC-04924]
             </nav>
-            <h1>Precedence out of range [GHC-25078]</h1>
+            <h1>Unknown flag in GHC options pragma [GHC-04924]</h1>
             
 
 
-<p>When defining custom infix operators and assigning them an operator precedence with <code>infixl</code> or <code>infixr</code>, the precedence must be <code>1 &lt;= x &lt;= 9</code>.</p>
+<p>A flag was found in the <code>OPTIONS_GHC</code> pragma that was not known; the list of all possible GHC flags is <a href="https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/flags.html">here</a>.</p>
 
 <h2>Examples</h2>
 
 <details open="open">
-  <summary>Invalid operator precedence</summary>
+  <summary>Unknown flag in  {-\# OPTIONS_GHC \#-} pragma</summary>
   <div class="example-container">
-    <p>An operator’s precedence must be <code>1 &lt;= x &lt;= 9</code>.</p>
+    <p>A flag was found in the <code>OPTIONS_GHC</code> pragma that was not known.</p>
 <h2 id="error-message">Error Message</h2>
-<pre><code>InvalidPrecedence.hs:6:8: error: [ghc-25078]
-    Precedence out of range: 1000
+<pre><code>UnknownOptionsFlag.hs:1:16: error: [GHC-04924]
+    unknown flag in  {-# OPTIONS_GHC #-} pragma: -flat-specialise
   |
-6 | infixl 1000 ⊚‿⊚
-  |        ^^^^</code></pre>
+1 | {-# OPTIONS_GHC -flat-specialise #-}
+  |                ^^^^^^^^^^^^^^^^^^</code></pre>
 
 <table width="100%">
   
-  <tr><td colspan="2" class="filename"><pre>InvalidPrecedence.hs</pre></td></tr>
+  <tr><td colspan="2" class="filename"><pre>UnknownOptionsFlag.hs</pre></td></tr>
   <tr>
     <td width="50%" class="beforeafter">Before</td>
     <td width="50%" class="beforeafter">After</td>
   </tr>
   <tr>
     <td>
-      <pre><code class="language-haskell">module InvalidPrecedence where
+      <pre><code class="language-haskell">{-# OPTIONS_GHC -flat-specialise #-}
 
-(⊚‿⊚) :: Int -> Int -> Int
-(⊚‿⊚) = (+)
-
-infixl 1000 ⊚‿⊚
-</code></pre>
+module UnknownOptionsFlag where</code></pre>
     </td>
     <td>
-      <pre><code class="language-haskell">module InvalidPrecedence where
+      <pre><code class="language-haskell">{-# OPTIONS_GHC -flate-specialise #-}
 
-module InvalidPrecedence where
-
-(⊚‿⊚) :: Int -> Int -> Int
-(⊚‿⊚) = (+)
-
-infixl 9 ⊚‿⊚
-</code></pre>
+module UnknownOptionsFlag where</code></pre>
     </td>
   </tr>
   
