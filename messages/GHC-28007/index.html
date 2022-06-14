@@ -5,7 +5,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex">
-        <title>Cannot parse LANGUAGE pragma [GHC-68686] — Haskell Error Index</title>
+        <title>Misplaced LANGUAGE pragma [GHC-28007] — Haskell Error Index</title>
         <link rel="stylesheet" href="../../css/default.css" />
         <link rel="stylesheet" href="../../css/highlight.css">
         <script src="../../js/highlight.min.js"></script>
@@ -26,24 +26,40 @@
               
                 <a href="../../index.html">Home</a>&nbsp;»
               
-              Cannot parse LANGUAGE pragma [GHC-68686]
+              Misplaced LANGUAGE pragma [GHC-28007]
             </nav>
-            <h1>Cannot parse LANGUAGE pragma [GHC-68686]</h1>
+            <h1>Misplaced LANGUAGE pragma [GHC-28007]</h1>
             
 
 
-<p>The LANGUAGE pragma expects a comma separated list of existing language extension. Each start with a capital letter.</p>
+<p>LANGUAGE pragmas should be placed in the module header.
+The module header is the section at the top of the file, before the <code>module</code> keyword.</p>
 
 <h2>Examples</h2>
 
 <details open="open">
-  <summary>Invalid LANGUAGE pragma</summary>
+  <summary>Misplaced language pragma</summary>
   <div class="example-container">
-    <h2 id="error-message">Error Message</h2>
-<pre><code>    Cannot parse LANGUAGE pragma
-    Expecting comma-separated list of language options,
-    each starting with a capital letter
-      E.g. {-# LANGUAGE TemplateHaskell, GADTs #-}
+    <p>LANGUAGE pragmas need to come before the <code>module</code> keyword.
+In the example below, the <code>RecursiveDo</code> pragma is placed after the module keyword. Therefore, there’s an additional error on line 10 suggesting that the <code>RecursiveDo</code> extension should be enabled. This is because language pragmas placed below the module header are ignored.</p>
+<h2 id="error-message">Error Message</h2>
+<pre><code>Main.hs:5:1: warning: [-Wmisplaced-pragmas] [GHC-28007]
+    Misplaced LANGUAGE pragma
+    Suggested fix:
+      Perhaps you meant to place it in the module header?
+      The module header is the section at the top of the file, before the ‘module’ keyword
+  |
+5 | {-# LANGUAGE RecursiveDo #-}
+  | ^^^^^^^^^^^^
+[1 of 2] Compiling Main             ( Main.hs, Main.o )
+
+Main.hs:10:9: error: [GHC-88464]
+    Variable not in scope: mdo :: a -&gt; a
+    Suggested fixes:
+      • Perhaps use ‘mod’ (imported from Prelude)
+      • Perhaps you intended to use RecursiveDo
+   |
+10 | foo x = mdo x
 </code></pre>
 
 <table width="100%">
@@ -55,19 +71,28 @@
   </tr>
   <tr>
     <td>
-      <pre><code class="language-haskell">{-# LANGUAGE GADTs TemplateHaskell #-}
+      <pre><code class="language-haskell">{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
-main = print "Please look at the LANGUAGE pragmas!"
+{-# LANGUAGE RecursiveDo #-}
+
+main = pure ()
+
+foo :: forall a. a -> a
+foo x = mdo x
 </code></pre>
     </td>
     <td>
-      <pre><code class="language-haskell">{-# LANGUAGE GADTs, TemplateHaskell #-}
+      <pre><code class="language-haskell">{-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main where
 
-main = print "Please look at the LANGUAGE pragmas!"
+main = pure ()
+
+foo :: forall a. a -> a
+foo x = mdo x
 </code></pre>
     </td>
   </tr>
